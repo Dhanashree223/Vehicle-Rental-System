@@ -19,6 +19,13 @@ public class Vehicle {
 	private String vNumber;
 	private String vBrand;
 	private String vType;
+	private String image;
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
 	public int getVId() {
 		return vId;
 	}

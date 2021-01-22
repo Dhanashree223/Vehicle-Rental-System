@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "Reg_User")
 public class User {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)		
 	private int uId;
@@ -85,5 +86,9 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	@Override
+	public String toString() {
+		return "User [uId=" + uId + ", email=" + email + ", name=" + name + ", contact=" + contact + ", address="
+				+ address + ", password=" + password + ", role=" + role + "]";
+	}
 }

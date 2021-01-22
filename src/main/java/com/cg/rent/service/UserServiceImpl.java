@@ -118,7 +118,9 @@ public class UserServiceImpl implements UserService{
 			userFromDB.setAddress(user.getAddress());
 			userFromDB.setContact(user.getContact());
 			userFromDB.setPassword(user.getPassword());
-			user = userDAO.saveAndFlush(userFromDB);
+			user = userDAO.save(userFromDB);
+			//System.out.println(user);
+			//System.out.println(userFromDB);
 		}
 		LOGGER.info("Done in UserService - (updateUser)");
 		return user;
@@ -154,7 +156,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * fetchAllVhicle()
+	 * fetchAllVheicle()
 	 * This method will return list of all vehicle
 	 * @return List of User 
 	 */
@@ -164,5 +166,33 @@ public class UserServiceImpl implements UserService{
 		List<Vehicle> vehicleList = vehicleDAO.findAll();
 		LOGGER.info("Done in UserService - (fetchAllVehicle)");
 		return vehicleList;
+	}
+	
+	/*
+	 * findUserById()
+	 * @return User instance
+	 */
+	public User findUserById(int id)
+	{
+		LOGGER.info("Entered in UserService - (findUserByEmail)");
+		User user = userDAO.findById(id).get();
+		LOGGER.info("Done in UserService - (findUserByEmail)");
+		return user;
+	}
+	
+	public Vehicle findVehicleById(int id)
+	{
+		LOGGER.info("Entered in UserService - (findVehicleById)");
+		Vehicle vehicle = vehicleDAO.findById(id).get();
+		LOGGER.info("Done in UserService - (findVehicleById)");
+		return vehicle;
+	}
+	
+	public Booking findBooking(int id)
+	{
+		LOGGER.info("Entered in UserService - (findBooking)");
+		Booking booking = bookingDAO.findByUserId(id);
+		LOGGER.info("Done in UserService - (findBooking)");
+		return booking;
 	}
 }

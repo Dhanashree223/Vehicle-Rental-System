@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.cg.rent.model.Vehicle;
 import com.cg.rent.service.UserManagementServiceImpl;
 import com.cg.rent.service.UserServiceImpl;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -87,12 +89,18 @@ public class UserController {
 	 * @return String Message
 	 */
 	@PostMapping("/login")
-	String userLogin(@RequestBody Login login)
+	ResponseEntity<?> userLogin(@RequestBody Login login)
 	{
 		LOGGER.info("Entered in User Controller - (login)");
 		String result = userManager.login(login);
 		LOGGER.info("Done in User Controller - (login)");
-		return result;
+		if(result.contains("Please"))
+			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
+		else
+		{
+			User user = userService.findUserByEmail(login.getEmail());
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		}
 	}
 	
 	/**
@@ -155,5 +163,44 @@ public class UserController {
 			return new ResponseEntity<String>("Enquiry added Successfully... ",HttpStatus.OK);
 		else
 			return new ResponseEntity<String>("Enquiry is not added",HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/getUser/{id}")
+	ResponseEntity<User> getUser(@PathVariable("id") int id)throws ResourceNotFoundException
+	{
+		LOGGER.info("Entered in User Controller - (findById)");
+		User user = userService.findUserById(id);
+		LOGGER.info("Done in User Controller - (findById)");
+		return new ResponseEntity<User>(user,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getVehicle/{id}")
+	ResponseEntity<Vehicle> getVehicle(@PathVariable("id") int id)throws ResourceNotFoundException
+	{
+		LOGGER.info("Entered in User Controller - (findByVehicleId)");
+		Vehicle vehicle = userService.findVehicleById(id);
+		LOGGER.info("Done in User Controller - (findByVehicleId)");
+		return new ResponseEntity<Vehicle>(vehicle,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getBooking/{id}")
+	ResponseEntity<Booking> getBooking(@PathVariable("id") int id)throws ResourceNotFoundException
+	{
+		LOGGER.info("Entered in User Controller - (findBooking)");
+		Booking booking = userService.findBooking(id);
+		LOGGER.info("Done in User Controller - (findBooking)");
+		return new ResponseEntity<Booking>(booking,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getUserByEmail/{email}")
+	ResponseEntity<User> getUserByEmail(@PathVariable("email") String email)throws ResourceNotFoundException
+	{
+		LOGGER.info("Entered in User Controller - (findBooking)");
+		User user = userService.findUserByEmail(email);
+		LOGGER.info("Done in User Controller - (findBooking)");
+		if(user!=null)
+			return new ResponseEntity<User>(user,HttpStatus.OK);
+		else
+			return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
 	}
 }

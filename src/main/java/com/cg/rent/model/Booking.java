@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
+import org.springframework.format.annotation.DateTimeFormat;
 /**
  * Booking class is POJO class having all booking details.
  * @author 15BW089AX
@@ -23,8 +25,9 @@ public class Booking {
 	@OneToOne
 	@JoinColumn(name = "VId_FK")
 	private Vehicle vehicle;
-	
+	@DateTimeFormat(pattern="yyyy-mm-dd")
 	private Date toDate;
+	@DateTimeFormat(pattern="yyyy-mm-dd")
 	private Date fromDate;
 	private int status;
 	

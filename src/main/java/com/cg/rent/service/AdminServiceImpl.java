@@ -69,6 +69,7 @@ public class AdminServiceImpl implements AdminService {
 		vehicleFromDB.setVbrand(vehicle.getVbrand());
 		vehicleFromDB.setVType(vehicle.getVType());
 		vehicleFromDB.setVNumber(vehicle.getVNumber());
+		vehicleFromDB.setImage(vehicle.getImage());
 		vehicleDAO.save(vehicleFromDB);
 		LOGGER.info("Done in AdminService - (editVehicle)");
 		return vehicleFromDB;
@@ -205,5 +206,19 @@ public class AdminServiceImpl implements AdminService {
 		List<Vehicle> vehicleList = vehicleDAO.findAll();
 		LOGGER.info("Done in AdminService - (fetchAllVehicle)");
 		return vehicleList;
+	}
+	
+	/**
+	 * findUserByEmail()
+	 * This method will return user instance with given mail
+	 * @param email
+	 * @return User instance
+	 */
+	public User findUserByEmail(String email)
+	{
+		LOGGER.info("Entered in AdminService - (findUserByEmail)");
+		User user = userDAO.findUserByEmail(email);
+		LOGGER.info("Done in AdminService - (findUserByEmail)");
+		return user;
 	}
 }

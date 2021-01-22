@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.cg.rent.model.Login;
 import com.cg.rent.model.User;
 import com.cg.rent.model.Vehicle;
 import com.cg.rent.service.UserManagementServiceImpl;
@@ -52,7 +53,10 @@ public class UserControllerTest {
 		//{"id":"101,j......."}
 		Mockito.when(userManager.registerUser(Mockito.any(User.class))).thenReturn(user);
 
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(URI).accept(MediaType.APPLICATION_JSON).content(jsonInput).contentType(MediaType.APPLICATION_JSON))
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(URI)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(jsonInput)
+				.contentType(MediaType.APPLICATION_JSON))
 				.andReturn();
 		MockHttpServletResponse mockHttpServletResponse = mvcResult.getResponse();
 		String jsonOutput = mockHttpServletResponse.getContentAsString();
@@ -160,6 +164,32 @@ public class UserControllerTest {
 		String jsonOutput = mockHttpServletResponse.getContentAsString();
 
 		assertThat(jsonInput).isEqualTo(jsonOutput);
+	}
+
+
+	@Test
+	public void testLogin() throws Exception
+	{   
+		String URI = "/user/login";
+		Login login = new Login();
+		login.setEmail("dhanashree@gmail.com");
+		login.setPassword("5678");
+		
+		String result = "Welcome Dhanashree\nYour User Id :1";
+
+		Mockito.when(userManager.login(Mockito.any())).thenReturn(result);
+		String jsonInput = this.converttoJson(login);
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(URI)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(jsonInput)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+
+		MockHttpServletResponse mockHttpServletResponse = mvcResult.getResponse();
+		String jsonOutput = mockHttpServletResponse.getContentAsString();
+		
+		assertThat(result).isEqualTo(jsonOutput);
+
 	}
 
 

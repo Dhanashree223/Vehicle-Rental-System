@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +27,7 @@ import com.cg.rent.model.Vehicle;
 import com.cg.rent.service.AdminServiceImpl;
 import com.cg.rent.service.UserManagementServiceImpl;
 
-
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -47,15 +47,18 @@ public class AdminController {
 	 * @return String message
 	 */
 	@PostMapping("/login")
-	String adminLogin(@RequestBody Login login)
+	ResponseEntity<?> adminLogin(@RequestBody Login login)
 	{
 		LOGGER.info("Entered in Admin Controller - (login)");
 		String result = userManager.login(login);
+		User user = adminService.findUserByEmail(login.getEmail());
 		LOGGER.info("Done in Admin Controller - (login)");
 		if(result.contains("User"))
-			return "Sorry!! You are not admin";
+			return new ResponseEntity<String>("Sorry!! You are not admin", HttpStatus.BAD_REQUEST);
+		if(result.contains("Please"))
+			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
 		else
-			return result;
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
 	/**
